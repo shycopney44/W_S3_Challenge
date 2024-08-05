@@ -46,6 +46,44 @@
 
     // 👉 CHALLENGE 1 - Integers
     class Integers {
+      constructor(...args) {
+        this.ints = args.filter(Number.isInteger);
+      }
+
+      getAll() {
+        return this.ints;
+      }
+
+      getEvens() {
+        return this.ints.filter((num) => num % 2 === 0);
+      }
+
+      getNegatives() {
+        return this.ints.filter((num) => num < 0);
+      }
+
+      getAllSquared() {
+        return this.ints.map((num) => num ** 2);
+      }
+
+      pop() {
+        return this.ints.pop();
+      }
+
+      push(num) {
+        if (Number.isInteger(num)) {
+          this.ints.push(num);
+        }
+        return this.ints;
+      }
+
+      getEveryNth(n) {
+        return this.ints.filter((_, index) => index % n === 0);
+      }
+
+      getAllReversed() {
+        return [...this.ints].reverse();
+      }
       // 🧠 Constructor takes **any** number of arguments, which are integers
       // 🧠 Instances have an `ints` property which is an array holding the integers above in the same order
       // 🧠 Implement a `getAll` method which returns the data held in the `ints` property
@@ -63,6 +101,34 @@
 
     // 👉 CHALLENGE 2 NerfGun
     class NerfGun {
+      constructor(capacity) {
+        this.capacity = capacity;
+        this.currentAmmo = capacity;
+        this.safetyOn = true;
+      }
+
+      shoot() {
+        if (this.currentAmmo > 0 && !this.safetyOn) {
+          this.currentAmmo--;
+          return "Bang!";
+        } else {
+          return "Click!";
+        }
+      }
+
+      reload(amount) {
+        if (typeof amount !== "number" || amount <= 0) {
+          return "Error reloading!";
+        }
+        const totalAmmo = this.currentAmmo + amount;
+        this.currentAmmo = Math.min(this.capacity, totalAmmo);
+        return `${this.currentAmmo} projectiles left!`;
+      }
+
+      toggleSafety() {
+        this.safetyOn = !this.safetyOn;
+        return this.safetyOn ? "Safety enabled!" : "Safety disabled!";
+      }
       // 🧠 Constructor takes one argument: the total number of projectiles supported by the instance
       // 🧠 New instances initialize fully loaded and with the safety on
       // 🧠 Instances have a `shoot` method that takes no arguments:
@@ -81,6 +147,24 @@
 
     // 👉 CHALLENGE 3 EBook
     class EBook {
+      constructor(text, pageSize) {
+        this.text = text;
+        this.pageSize = pageSize;
+        this.currentPage = 0;
+      }
+
+      next() {
+        const start = this.currentPage * this.pageSize;
+        const end = start + this.pageSize;
+        const pageContent = this.text.slice(start, end);
+        this.currentPage++;
+
+        if (pageContent.length === 0) {
+          return null;
+        }
+
+        return pageContent;
+      }
       // 🧠 Constructor takes two arguments:
       //      * First arg is a string with the whole text of the book
       //      * Second arg is the number of characters contained in a single page of the book
@@ -100,6 +184,36 @@
 
     // 👉 CHALLENGE 4 AntFarm
     class AntFarm {
+      constructor(...antNames) {
+        this.ants = antNames.map(name => ({ name, health: 100 }));
+      }
+
+      work() {
+        const initialAntCount = this.ants.length;
+
+        if (initialAntCount === 0) {
+          return "No ants here. Did you work them to death?";
+        }
+
+        this.ants = this.ants.map(ant => ({ ...ant, health: ant.health - 20}))
+                              .filter(ant => ant.health > 0);
+
+        const remainingAntCount = this.ants.length;
+        return `${initialAntCount} ants starting work!`;
+      }
+
+      feed(antName) {
+        let found = false;
+        this.ants = this.ants.map(ant => {
+          if (ant.name === antName) {
+            found = true;
+            return { ...ant, health: ant.health + 15 };
+          }
+          return ant;
+        });
+
+        return found ? "Yum!" : `${antName} not found!`;
+      }
       // 🧠 Constructor takes **any** number of arguments, which are strings: the names of your ants
       // 🧠 Instances of AntFarm have an `ants` property holding an array of ants:
       //      * Each ant is an object with a `name` prop and a `health` prop that starts at 100
